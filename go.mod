@@ -1,4 +1,4 @@
-module github.com/ImZaryab/bubbletea-file-picker-example
+module github.com/ImZaryab/braindump
 
 go 1.20
 

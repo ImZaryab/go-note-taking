@@ -13,7 +13,6 @@ import (
 
 	"github.com/charmbracelet/bubbles/filepicker"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/joho/godotenv"
 	"github.com/sashabaranov/go-openai"
 )
 
@@ -96,10 +95,10 @@ func (m model) View() string {
 }
 
 func main() {
-
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
+	envErr := os.Setenv("OPENAI_KEY", "<Your OPENAI API key>")
+	if envErr != nil {
+		fmt.Println("Error setting environment variable:", envErr)
+		return
 	}
 
 	apiKey := os.Getenv("OPENAI_KEY")
@@ -133,7 +132,7 @@ func main() {
 		return
 	}
 
-  filename := resp.Choices[0].Message.Content
+	filename := resp.Choices[0].Message.Content
 
 	fp := filepicker.New()
 	fp.ShowPermissions = false
@@ -147,7 +146,7 @@ func main() {
 	mm := tm.(model)
 	// X // We have the directory selected now
 	fmt.Println("\nDirectory selected: " + m.filepicker.Styles.Selected.Render(mm.selectedFile) + "\n")
-	
+
 	// X // create an empty .txt file in the dir
 	fileNameWithPath := mm.selectedFile + "\\" + filename
 
@@ -168,5 +167,5 @@ func main() {
 		log.Fatalf("Failed writing to file: %s", writeErr)
 	}
 
-	fmt.Println("New file created: " + m.filepicker.Styles.Selected.Render(mm.selectedFile + "\\" + filename) + "\n")
+	fmt.Println("New file created: " + m.filepicker.Styles.Selected.Render(mm.selectedFile+"\\"+filename) + "\n")
 }
